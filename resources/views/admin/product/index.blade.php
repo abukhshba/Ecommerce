@@ -20,7 +20,11 @@
                     <td>{{ $product->name }}</td>
                     <td>{{ $product->description }}</td>
                     <td>{{ $product->price }}</td>
-                    <td>{{$product->image}}</td>
+                    <td>
+                        @foreach (explode(',' , $product->image ) as $image)
+                            <img src="{{url($image)}}" alt="dsa" width="50" , height="50">
+                        @endforeach
+                    </td>
                     <td><a href="{{route('product.category', $product->id) }}" class="btn btn-success">show categories</a></td>
 
                     <td><a class="btn btn-info" href="{{ url("admin/product/edit/$product->id") }}">update</a></td>

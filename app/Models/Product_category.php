@@ -7,10 +7,10 @@ use Illuminate\Database\Eloquent\Model;
 
 class Product_category extends Model
 {
+    public $timestamps = true; 
     protected $fillable = [
         'category_id',
         'product_id'
-
     ];
 
 
