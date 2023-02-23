@@ -51,28 +51,27 @@ class ProductController extends Controller
                 $imageName = md5(rand(1000 , 10000));
                 $ext = strtolower($file->getClientOriginalExtension());
                 $imageFullName = $imageName . '.' . $ext;
-                $uploadPath = "images";
+                $uploadPath = "images/";
                 $imageUrl = $uploadPath.$imageFullName;
                 $file->move($uploadPath , $imageFullName);
                 $image[]=$imageUrl;
             }
         }
 
-        $product = new Product;
+        $paths = implode(',', $image); 
+        $productRecord = new Product;
+        $productRecord->name = $request->name;
+        $productRecord->description =$request->description; 
+        $productRecord->price =$request->price;
+        $productRecord->image =$paths;
+        $productRecord->save(); 
 
-        $product::insert([
-
-            'name' =>$request->name,
-            'description' =>$request->description,
-            'price' =>$request->price,
-            'image' =>implode(' | ' , $image),
-
-        ]);
-        dd($product->name);
-
-
-
-
+        foreach ($request->category_id as $cat_id){
+            Product_category::insert([
+                'category_id'=>$cat_id, 
+                'product_id' =>$productRecord->id
+            ]); 
+        } 
         return redirect("admin/product")->with('flash_messege' , 'Product Added');
      }
 
