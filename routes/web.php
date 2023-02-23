@@ -9,7 +9,7 @@ use App\Models\Category;
 use App\Models\Product;
 use App\Models\Product_category;
 use App\Models\User;
-
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -22,7 +22,6 @@ use Illuminate\Support\Facades\Route;
 | be assigned to the "web" middleware group. Make something great!
 |
 */
-
 
 
 Route::get("login",[UserController::class,"login"])->name("login");
@@ -57,19 +56,4 @@ Route::group(['prefix'=>"admin/product","middleware"=>"auth"],function(){
 
 
 
-//Trival 
-
-
-
-route::get('dd' , function(){
-
-//    $x = User::get()->paginate(10) ; 
-   $x = DB::table('users')->select('id')->paginate(10)->all() ; 
-   foreach($x as $a ){
-        echo $a->id ."<br>"; 
-   }
-   dd($x) ; 
-
-
-   
-}); 
+//Trival

@@ -7,6 +7,7 @@ use App\Models\Category;
 use App\Models\Product_category;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\Rules\Unique;
 use Illuminate\View\View;
 
@@ -22,6 +23,7 @@ class ProductController extends Controller
         return view('admin.product.index', [
             'products' => $products,
             'categories'=>$category,
+
         ]);
 
     }
@@ -58,20 +60,22 @@ class ProductController extends Controller
             }
         }
 
-        $paths = implode(',', $image); 
+        $paths = implode(',', $image);
+
+        
         $productRecord = new Product;
         $productRecord->name = $request->name;
-        $productRecord->description =$request->description; 
+        $productRecord->description =$request->description;
         $productRecord->price =$request->price;
         $productRecord->image =$paths;
-        $productRecord->save(); 
+        $productRecord->save();
 
         foreach ($request->category_id as $cat_id){
             Product_category::insert([
-                'category_id'=>$cat_id, 
+                'category_id'=>$cat_id,
                 'product_id' =>$productRecord->id
-            ]); 
-        } 
+            ]);
+        }
         return redirect("admin/product")->with('flash_messege' , 'Product Added');
      }
 

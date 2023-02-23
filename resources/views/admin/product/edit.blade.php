@@ -24,7 +24,7 @@
             <div class="mb-6 ">
                 <label class="block">
                     <span class="text-gray-700">Select Category</span>
-                    <select name="category_id" class="block w-full mt-1 rounded-md">
+                    <select name="category_id[]" multiple class="form-control">
                         @foreach ($categories as $category)
                             <option value="{{ $category->id }}">{{ $category->name }}</option>
                         @endforeach
