@@ -30,9 +30,6 @@
                         @endforeach
                     </select>
                 </label>
-                @error('category_id')
-                    <div class="text-sm text-red-600">{{ $message }}</div>
-                @enderror
             </div>
 
         </div>

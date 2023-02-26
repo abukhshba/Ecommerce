@@ -13,7 +13,7 @@
         @forelse($categories as $category)
 
       <tr>
-        <td>{{$loop->index+1}}</td>
+        <td>{{$category->id}}</td>
         <td>{{$category->name}}</td>
 
       </tr>

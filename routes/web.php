@@ -48,8 +48,8 @@ Route::group(['prefix'=>"admin/product","middleware"=>"auth"],function(){
     Route::get("/delete/{id}",[ProductController::class,"destroy"]);
     Route::get("/edit/{id}",[ProductController::class,"edit"]);
     Route::post("/update",[ProductController::class,"update"]);
-    Route::get("/showCategory/{product_id}",[RelationsController::class,"getProductCategory"])->name('product.category');
-    Route::post("saveCategoryProduct",[RelationsController::class,"saveCategoryProduct"])->name('save.product.category');
+    Route::get("/showCategory/{product_id}",[ProductController::class,"getProductCategory"])->name('product.category');
+    Route::post("saveCategoryProduct",[ProductController::class,"saveCategoryProduct"])->name('save.product.category');
 
 
 });

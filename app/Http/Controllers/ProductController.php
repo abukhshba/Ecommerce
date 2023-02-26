@@ -23,7 +23,7 @@ class ProductController extends Controller
         return view('admin.product.index', [
             'products' => $products,
             'categories'=>$category,
-            
+
 
         ]);
 
@@ -49,9 +49,10 @@ class ProductController extends Controller
     {
 
         $image = array();
-        if($files = $request->file('image')){
+        $files = $request->file('image');
+        if($files){
             foreach($files as $file){
-                $imageName = md5(rand(1000 , 10000));
+                $imageName = time();
                 $ext = strtolower($file->getClientOriginalExtension());
                 $imageFullName = $imageName . '.' . $ext;
                 $uploadPath = "images/";
@@ -64,45 +65,53 @@ class ProductController extends Controller
         $paths = implode(',', $image);
 
 
-        $productRecord = new Product;
-        $productRecord->name = $request->name;
-        $productRecord->description =$request->description;
-        $productRecord->price =$request->price;
-        $productRecord->image =$paths;
-        $productRecord->save();
+        $productRequest = new Product;
+        $productRequest->name = $request->name;
+        $productRequest->description =$request->description;
+        $productRequest->price =$request->price;
+        $productRequest->image =$paths;
+        $productRequest->save();
 
         foreach ($request->category_id as $cat_id){
             Product_category::insert([
                 'category_id'=>$cat_id,
-                'product_id' =>$productRecord->id
+                'product_id' =>$productRequest->id
             ]);
         }
-        return redirect("admin/product")->with('flash_messege' , 'Product Added');
+        return redirect("admin/product");
      }
 
+//
 
+    public function getProductCategory($product_id)
+    {
+        $categories = Product_category::join('categories', 'categories.id', '=',
+         'product_categories.category_id')->where('product_categories.product_id',
+          $product_id)-> select('categories.id','categories.name')->get();
 
-    /**
-     * Show the form for editing the specified resource.
-     */
+         return view('admin.product.showCategory', compact('categories'));
+
+    }
+    public function saveCategoryProduct(Request $request)
+    {
+        return $request;
+    }
+
     public function edit($id): View
     {
         $product = Product::find($id);
         $categories =  Category::all();
-        return view('admin.product.edit', [
-            'product' => $product,
-            'categories'=>$categories,
-        ]);
+        return view('admin.product.edit', compact('product','categories'));
 
     }
-
     /**
      * Update the specified resource in storage.
      */
     public function update(Request $request): RedirectResponse
     {
         $product =  product::find($request->id);
-        $product->update($request->except(['_token' , 'id']));
+
+        $product->update($request->except(['_token']));
         return redirect("admin/product");
 
     }
@@ -116,6 +125,8 @@ class ProductController extends Controller
         $product->delete();
         return redirect('admin/product');
     }
+
+
 
     // Search API with name
     public function search($name  ){
