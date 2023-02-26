@@ -18,11 +18,12 @@ class ProductController extends Controller
      */
     public function index(): View
     {
-        $products = Product::all();
+        $products = Product::paginate(10);
         $category =  Category::all();
         return view('admin.product.index', [
             'products' => $products,
             'categories'=>$category,
+            
 
         ]);
 
@@ -62,7 +63,7 @@ class ProductController extends Controller
 
         $paths = implode(',', $image);
 
-        
+
         $productRecord = new Product;
         $productRecord->name = $request->name;
         $productRecord->description =$request->description;
