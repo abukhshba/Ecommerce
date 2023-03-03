@@ -55,7 +55,3 @@ Route::group(['prefix'=>"admin/product"],function(){
 
 
 });
-
-
-
-//Trival
