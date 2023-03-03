@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Product;
 use App\Models\Category;
+use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
@@ -24,8 +25,7 @@ class CategoryController extends Controller
      */
     public function create(): View
     {
-        $categories =  Category::all();
-        return view('admin.category.create',compact('categories'));
+        return view('admin.category.create');
     }
 
     /**
@@ -33,6 +33,7 @@ class CategoryController extends Controller
      */
     public function store(Request $request): RedirectResponse
     {
+
         Category::create($request->all());
         return redirect("admin/category");
     }

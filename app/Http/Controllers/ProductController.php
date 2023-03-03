@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Product;
 use App\Models\Category;
+use App\Models\Image;
 use App\Models\Product_category;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -19,27 +20,20 @@ class ProductController extends Controller
     public function index(): View
     {
         $products = Product::paginate(10);
-        $category =  Category::all();
+        $images = Image::all();
         return view('admin.product.index', [
             'products' => $products,
-            'categories'=>$category,
-
+            'images' => $images,
 
         ]);
 
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
     public function create(): View
     {
-        $categories =  Category::all();
-        $products =  Product::all();
-
         $allcategories = Category::select('id' , 'name')->get();
 
-        return view('admin.product.create',compact('categories','products' , 'allcategories'));
+        return view('admin.product.create',compact('allcategories'));
     }
 
     /**
@@ -52,13 +46,19 @@ class ProductController extends Controller
         $files = $request->file('image');
         if($files){
             foreach($files as $file){
-                $imageName = time();
-                $ext = strtolower($file->getClientOriginalExtension());
-                $imageFullName = $imageName . '.' . $ext;
-                $uploadPath = "images/";
-                $imageUrl = $uploadPath.$imageFullName;
-                $file->move($uploadPath , $imageFullName);
-                $image[]=$imageUrl;
+
+                $fileName = time().". ".$file->getClientOriginalExtension();
+                $path = $file->storeAs('images',$fileName , 'public');
+                $imageUrl = "/storage/" .$path;
+                $image[]= $imageUrl;
+                
+                // $imageName = time();
+                // $ext = strtolower($file->getClientOriginalExtension());
+                // $imageFullName = $imageName . '.' . $ext;
+                // $uploadPath = "images/";
+                // $imageUrl = $uploadPath.$imageFullName;
+                // $file->move($uploadPath , $imageFullName);
+                // $image[]=$imageUrl;
             }
         }
 
@@ -69,12 +69,16 @@ class ProductController extends Controller
         $productRequest->name = $request->name;
         $productRequest->description =$request->description;
         $productRequest->price =$request->price;
-        $productRequest->image =$paths;
         $productRequest->save();
-
         foreach ($request->category_id as $cat_id){
             Product_category::insert([
                 'category_id'=>$cat_id,
+                'product_id' =>$productRequest->id
+            ]);
+        }
+        foreach ($image as $image){
+            Image::insert([
+                'image'=>$image,
                 'product_id' =>$productRequest->id
             ]);
         }
@@ -82,6 +86,20 @@ class ProductController extends Controller
      }
 
 //
+
+    public function getProductimage($product_id)
+    {
+        $images = Image::join('products', 'products.id', '=',
+         'images.product_id')->where('images.product_id',
+          $product_id)-> select('images.id','images.image','products.name')->get();
+
+         return view('admin.product.showImage', compact('images'));
+
+    }
+    public function saveimageProduct(Request $request)
+    {
+        return $request;
+    }
 
     public function getProductCategory($product_id)
     {
@@ -97,11 +115,10 @@ class ProductController extends Controller
         return $request;
     }
 
-    public function edit($id): View
+    public function edit($id  ): View
     {
         $product = Product::find($id);
-        $categories =  Category::all();
-        return view('admin.product.edit', compact('product','categories'));
+        return view('admin.product.edit', compact('product','images','categories'));
 
     }
     /**
@@ -109,9 +126,10 @@ class ProductController extends Controller
      */
     public function update(Request $request): RedirectResponse
     {
-        $product =  product::find($request->id);
-
+        $product =  Product::find($request->id);
+     
         $product->update($request->except(['_token']));
+   
         return redirect("admin/product");
 
     }
@@ -129,7 +147,7 @@ class ProductController extends Controller
 
 
     // Search API with name
-    public function search($name  ){
+    public function search($name){
 
         return Product::where("name" ,"like","%". $name."%")->get()  ;
     }
@@ -137,8 +155,14 @@ class ProductController extends Controller
 
     // filter API with category_id
 
-    public function filter($id){
+    public function filter($id)
+   {
+    $categories = Product_category::
+        join('categories' , 'categories.id' ,'=','product_categories.category_id')->
+        join('products', 'products.id' , '=' ,'product_categories.product_id')->
+        select('categories.id as category_id' , 'products.name as product_name')->
+        where('categories.id' , $id)->get();
 
-        return Product::where("category_id" , $id)->get()  ;
+        return $categories;
     }
 }

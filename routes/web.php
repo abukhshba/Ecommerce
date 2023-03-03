@@ -27,8 +27,8 @@ use Illuminate\Support\Facades\Route;
 Route::get("login",[UserController::class,"login"])->name("login");
 Route::get("logout",[UserController::class,"logout"]);
 Route::post("login",[UserController::class,"loginrequest"]);
-
-Route::group(['prefix'=>"admin/category","middleware"=>"auth"],function(){
+// "middleware"=>"auth"
+Route::group(['prefix'=>"admin/category"],function(){
 
     Route::get("/",[CategoryController::class,"index"]);
     Route::get("/create",[CategoryController::class,"create"]);
@@ -40,7 +40,7 @@ Route::group(['prefix'=>"admin/category","middleware"=>"auth"],function(){
 });
 
 
-Route::group(['prefix'=>"admin/product","middleware"=>"auth"],function(){
+Route::group(['prefix'=>"admin/product"],function(){
 
     Route::get("/",[ProductController::class,"index"]);
     Route::get("/create",[ProductController::class,"create"]);
@@ -50,6 +50,8 @@ Route::group(['prefix'=>"admin/product","middleware"=>"auth"],function(){
     Route::post("/update",[ProductController::class,"update"]);
     Route::get("/showCategory/{product_id}",[ProductController::class,"getProductCategory"])->name('product.category');
     Route::post("saveCategoryProduct",[ProductController::class,"saveCategoryProduct"])->name('save.product.category');
+    Route::get("/showImage/{product_id}",[ProductController::class,"getProductimage"])->name('product.image');
+    Route::post("saveimageProduct",[ProductController::class,"saveimageProduct"])->name('save.product.image');
 
 
 });
