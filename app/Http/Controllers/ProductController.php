@@ -20,10 +20,8 @@ class ProductController extends Controller
     public function index(): View
     {
         $products = Product::paginate(10);
-        $images = Image::all();
         return view('admin.product.index', [
             'products' => $products,
-            'images' => $images,
 
         ]);
 
@@ -62,9 +60,6 @@ class ProductController extends Controller
             }
         }
 
-        $paths = implode(',', $image);
-
-
         $productRequest = new Product;
         $productRequest->name = $request->name;
         $productRequest->description =$request->description;
@@ -84,6 +79,8 @@ class ProductController extends Controller
         }
         return redirect("admin/product");
      }
+
+     
 
 //
 

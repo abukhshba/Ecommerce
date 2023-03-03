@@ -44,7 +44,7 @@ Route::group(['prefix'=>"admin/product"],function(){
 
     Route::get("/",[ProductController::class,"index"]);
     Route::get("/create",[ProductController::class,"create"]);
-    Route::post("/store",[ProductController::class,"store"]);
+    Route::post("/store",[ProductController::class,"store"]);    
     Route::get("/delete/{id}",[ProductController::class,"destroy"]);
     Route::get("/edit/{id}",[ProductController::class,"edit"]);
     Route::post("/update",[ProductController::class,"update"]);

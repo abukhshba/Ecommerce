@@ -1,16 +1,15 @@
 @extends('layout')
 @section('body-content')
-    <table class="table table-bordered">
+    <table  style="text-align: center" class="table table-bordered">
         <thead>
             <tr>
-                <th style="width: 10px">#</th>
+                <th style="width: 10px">Id</th>
                 <th>name</th>
                 <th>description</th>
                 <th>price</th>
                 <th>image</th>
                 <th>category</th>
-                <th>update</th>
-                <th>delete</th>
+                <th>action</th>
             </tr>
         </thead>
         <tbody>
@@ -25,8 +24,8 @@
                        
                     <td><a href="{{route('product.category', $product->id) }}" class="btn btn-success">show categories</a></td>
 
-                    <td><a class="btn btn-info" href="{{ url("admin/product/edit/$product->id") }}">update</a></td>
-                    <td><a class="btn btn-danger" href="{{ url("admin/product/delete/$product->id") }}">delete</a></td>
+                    <td><a style="margin-right: 4px" class="btn btn-info" href="{{ url("admin/product/edit/$product->id") }}">update</a>
+                    <a style="margin-left: 4px" class="btn btn-danger" href="{{ url("admin/product/delete/$product->id") }}">delete</a></td>
                 </tr>
                 @empty
 
