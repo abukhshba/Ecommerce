@@ -47,7 +47,7 @@ class ProductController extends Controller
         if($files){
             foreach($files as $file){
 
-                $fileName = time().". ".$file->getClientOriginalExtension();
+                $fileName = time().".".$file->getClientOriginalExtension();
                 $path = $file->storeAs('images',$fileName , 'public');
                 $imageUrl = "/storage/" .$path;
                 $image[]= $imageUrl;
